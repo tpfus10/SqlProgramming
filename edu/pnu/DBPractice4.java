@@ -93,12 +93,11 @@ public class DBPractice4 {
 			while (rs.next()) {
 				System.out.println("[" + rs.getString("countrycode") + "]");
 				System.out.print(rs.getString("name"));
-				System.out.print("(" + rs.getString("id") + ")"); 
+				System.out.println("(" + rs.getString("id") + ")"); 
 				System.out.println("인구수" + rs.getString("population") + "명");
 				System.out.println();
 			}
 			
-
 			rs.close();
 			st.close();
 			con.close();
@@ -106,5 +105,6 @@ public class DBPractice4 {
 		} catch (Exception e) {
 			System.out.println("연결 실패" + e.getMessage());
 		}
+		//System.out.println("select id, name, countrycode, district, population from city where " + data.getField() + " " + data.getOrder() + " (" + data.getValue()+ ")");
 	}
 }
