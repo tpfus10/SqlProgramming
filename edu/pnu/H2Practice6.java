@@ -11,7 +11,6 @@ import java.util.Scanner;
 public class H2Practice6 {
 
 	public static void main(String[] args) {
-		PreparedStatement psmt = null;
 		Scanner sc = new Scanner(System.in);
 		System.out.println("수정할 데이터를 입력하세요");
 
@@ -34,23 +33,31 @@ public class H2Practice6 {
 			System.out.println("birthyear:");
 			int updateBirthyear = sc.nextInt();
 			System.out.println();
-
-			// Update 쿼리문 실행
-			psmt = con.prepareStatement("update Member set username = ?, password = ?, birthyear = ? where id = ?");
-			if (updateUsername != null && updatePassword != null && updateBirthyear != 0) {
-				psmt.setString(1, updateUsername);
-				psmt.setString(2, updatePassword);
-				psmt.setInt(3, updateBirthyear);
-				psmt.setInt(4, idToUpdate);
-			} else {
-				System.out.println("입력되지 않은 데이터가 있습니다");
+			
+			//동적 쿼리 작성하기 
+			String str = "";
+			if(updateUsername != null && !updateUsername.isEmpty()) {
+				str = "username='" + updateUsername + "'";
 			}
-
+			if(updatePassword != null && !updatePassword.isEmpty()) {
+				if(!str.isEmpty()) str += ", ";
+				str = str + "password='" + updatePassword + "'";
+			}
+			if(updateBirthyear != 0) {
+				if(!str.isEmpty()) str += ", ";
+				str = str + "birthyear=" + updateBirthyear;
+			}
+			
+			// Update 쿼리문 실행
+			String sql = "update Member set " + str + " where id=" + idToUpdate;
+			Statement st = con.createStatement();
+			st.executeUpdate(sql);
+	
+			//System.out.println(sql);
+			
 			// Update 결과를 출력
-			int rowsAltered = psmt.executeUpdate();
 			System.out.println("Member 테이블에서 id" + idToUpdate + "의 정보가 수정되었습니다.");
-			System.out.println("Member 테이블에서" + rowsAltered + "개의 레코드가 수정되었습니다.");
-
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
